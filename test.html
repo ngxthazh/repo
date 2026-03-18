@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI ĐÃ HỌC BÀI</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&amp;family=Space+Mono:wght@700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @keyframes float-particle {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+      50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(74, 222, 128, 0.8), 0 0 60px rgba(74, 222, 128, 0.3); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+      20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
+    }
+
+    @keyframes scale-in {
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes slide-up {
+      0% { transform: translateY(40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes glow-ring {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    @keyframes wrong-flash {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes bounce-in {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.15); }
+      70% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes progress-fill {
+      0% { width: 0%; }
+      100% { width: var(--progress); }
+    }
+
+    .option-btn {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .option-btn:hover::before {
+      width: 300px; height: 300px;
+    }
+
+    .option-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+    }
+
+    .option-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: confetti-fall 2.5s ease-in forwards;
+    }
+
+    .glow-ring-anim {
+      animation: glow-ring 1.5s ease-out infinite;
+    }
+
+    .screen-transition {
+      animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .slide-up-anim {
+      animation: slide-up 0.5s ease-out forwards;
+    }
+
+    .bounce-in-anim {
+      animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .shake-anim {
+      animation: shake 0.6s ease-in-out;
+    }
+
+    .correct-glow {
+      animation: pulse-glow 1.5s ease-in-out infinite;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto" style="background: #0a0e1a; font-family: 'Be Vietnam Pro', sans-serif;"><!-- START SCREEN -->
+   <div id="screen-start" class="h-full w-full flex flex-col items-center justify-center relative" style="background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+     <div style="position:absolute;top:15%;left:10%;width:4px;height:4px;background:#a78bfa;border-radius:50%;animation:float-particle 3s ease-in-out infinite;"></div>
+     <div style="position:absolute;top:30%;right:15%;width:6px;height:6px;background:#f472b6;border-radius:50%;animation:float-particle 4s ease-in-out 0.5s infinite;"></div>
+     <div style="position:absolute;top:60%;left:20%;width:5px;height:5px;background:#38bdf8;border-radius:50%;animation:float-particle 3.5s ease-in-out 1s infinite;"></div>
+     <div style="position:absolute;top:75%;right:25%;width:3px;height:3px;background:#fbbf24;border-radius:50%;animation:float-particle 2.8s ease-in-out 0.3s infinite;"></div>
+     <div style="position:absolute;top:45%;left:80%;width:5px;height:5px;background:#4ade80;border-radius:50%;animation:float-particle 3.2s ease-in-out 0.8s infinite;"></div>
+    </div>
+    <div class="text-center relative z-10 px-6">
+     <div class="mb-6 bounce-in-anim"><span style="font-size:64px;">🧠</span>
+     </div>
+     <h1 id="title-text" class="text-4xl md:text-6xl font-black mb-4 tracking-tight" style="color: #e0d4ff; text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);">AI ĐÃ HỌC BÀI</h1>
+     <p class="text-lg md:text-xl mb-2" style="color: #94a3b8;">Trắc nghiệm kiến thức Kinh tế Chính trị</p>
+     <p class="text-sm mb-10" style="color: #64748b;">7 câu hỏi · Chọn 1 đáp án đúng</p><button onclick="startGame()" class="option-btn px-10 py-4 rounded-2xl font-bold text-lg tracking-wide" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 30px rgba(124, 58, 237, 0.4);"> <span class="flex items-center gap-3 justify-center"> <i data-lucide="play" style="width:22px;height:22px;"></i> BẮT ĐẦU CHƠI </span> </button>
+    </div>
+   </div><!-- QUESTION SCREEN -->
+   <div id="screen-question" class="h-full w-full hidden flex-col" style="background: linear-gradient(160deg, #0a0e1a 0%, #111827 100%);">
+    <div class="w-full px-4 pt-4 md:px-8 md:pt-6">
+     <div class="flex items-center justify-between mb-3"><span id="q-counter" class="text-sm font-semibold px-3 py-1 rounded-full" style="background: rgba(124,58,237,0.2); color: #c4b5fd;">Câu 1/7</span>
+      <div id="score-display" class="text-sm font-semibold px-3 py-1 rounded-full flex items-center gap-2" style="background: rgba(74,222,128,0.15); color: #4ade80;"><i data-lucide="star" style="width:14px;height:14px;"></i> <span id="score-text">0 điểm</span>
+      </div>
+     </div>
+     <div class="w-full rounded-full h-2 mb-1" style="background: rgba(255,255,255,0.08);">
+      <div id="progress-bar" class="h-2 rounded-full transition-all duration-500" style="background: linear-gradient(90deg, #7c3aed, #a78bfa); width: 14.28%;"></div>
+     </div>
+    </div>
+    <div class="flex-1 flex flex-col items-center justify-center px-4 md:px-8 pb-6">
+     <div id="question-card" class="w-full max-w-2xl rounded-3xl p-6 md:p-8 mb-6 slide-up-anim" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);">
+      <p id="q-text" class="text-lg md:text-xl font-semibold leading-relaxed" style="color: #e2e8f0;"></p>
+     </div>
+     <div id="options-grid" class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+     </div>
+    </div>
+   </div><!-- CORRECT SCREEN -->
+   <div id="screen-correct" class="h-full w-full hidden flex-col items-center justify-center relative" style="background: linear-gradient(160deg, #052e16 0%, #0a0e1a 100%);">
+    <div id="confetti-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+    <div class="relative z-10 text-center px-6 screen-transition">
+     <div class="relative inline-block mb-6">
+      <div class="absolute inset-0 rounded-full glow-ring-anim" style="border: 2px solid rgba(74, 222, 128, 0.3);"></div>
+      <div class="w-24 h-24 rounded-full flex items-center justify-center correct-glow" style="background: linear-gradient(135deg, #059669, #10b981);"><i data-lucide="check" style="width:48px;height:48px;color:#fff;stroke-width:3;"></i>
+      </div>
+     </div>
+     <h2 id="correct-title" class="text-3xl md:text-4xl font-black mb-3" style="color: #4ade80;">Chúc mừng!</h2>
+     <p id="correct-msg" class="text-lg mb-8" style="color: #86efac;">Bạn trả lời đúng rồi!</p><button onclick="nextQuestion()" id="btn-next" class="option-btn px-8 py-3 rounded-2xl font-bold text-base" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);"> <span class="flex items-center gap-2 justify-center"> CÂU TIẾP THEO <i data-lucide="arrow-right" style="width:18px;height:18px;"></i> </span> </button>
+    </div>
+   </div><!-- WRONG SCREEN -->
+   <div id="screen-wrong" class="h-full w-full hidden flex-col items-center justify-center relative" style="background: linear-gradient(160deg, #2a0505 0%, #0a0e1a 100%);">
+    <div class="relative z-10 text-center px-6 screen-transition">
+     <div class="mb-6 shake-anim">
+      <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto" style="background: linear-gradient(135deg, #dc2626, #ef4444); box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);"><i data-lucide="x" style="width:48px;height:48px;color:#fff;stroke-width:3;"></i>
+      </div>
+     </div>
+     <h2 class="text-3xl md:text-4xl font-black mb-3" style="color: #f87171;">Rất tiếc!</h2>
+     <p id="wrong-msg" class="text-lg mb-3" style="color: #fca5a5;">Đáp án chưa chính xác.</p>
+     <div id="correct-answer-box" class="inline-block rounded-xl px-5 py-3 mb-8" style="background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3);">
+      <p class="text-sm" style="color: #86efac;"><span style="color: #4ade80; font-weight: 700;">Đáp án đúng:</span> <span id="correct-answer-text" class="ml-1"></span></p>
+     </div><br><button onclick="nextQuestion()" id="btn-next-wrong" class="option-btn px-8 py-3 rounded-2xl font-bold text-base" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);"> <span class="flex items-center gap-2 justify-center"> CÂU TIẾP THEO <i data-lucide="arrow-right" style="width:18px;height:18px;"></i> </span> </button>
+    </div>
+   </div><!-- RESULT SCREEN -->
+   <div id="screen-result" class="h-full w-full hidden flex-col items-center justify-center relative" style="background: linear-gradient(160deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);">
+    <div id="result-confetti" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+    <div class="relative z-10 text-center px-6 w-full max-w-lg screen-transition">
+     <div class="mb-4"><span id="result-emoji" style="font-size:72px;"></span>
+     </div>
+     <h2 id="result-title" class="text-3xl md:text-4xl font-black mb-2" style="color: #e0d4ff;"></h2>
+     <p id="result-subtitle" class="text-base mb-8" style="color: #94a3b8;"></p>
+     <div class="rounded-2xl p-6 mb-8" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);">
+      <div class="text-5xl font-black mb-2" style="font-family: 'Space Mono', monospace;"><span id="result-score" style="color: #a78bfa;">0</span><span style="color: #475569;">/7</span>
+      </div>
+      <p class="text-sm" style="color: #64748b;">câu trả lời đúng</p>
+      <div class="w-full rounded-full h-3 mt-4" style="background: rgba(255,255,255,0.08);">
+       <div id="result-bar" class="h-3 rounded-full transition-all duration-1000" style="background: linear-gradient(90deg, #7c3aed, #a78bfa); width: 0%;"></div>
+      </div>
+     </div><button onclick="restartGame()" class="option-btn px-8 py-3 rounded-2xl font-bold text-base" style="background: linear-gradient(135deg, #7c3aed, #a78bfa); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 30px rgba(124, 58, 237, 0.4);"> <span class="flex items-center gap-2 justify-center"> <i data-lucide="rotate-ccw" style="width:18px;height:18px;"></i> CHƠI LẠI </span> </button>
+    </div>
+   </div>
+  </div>
+  <script>
+  // Questions data
+  const questions = [
+    {
+      text: "Theo quan hệ lợi ích, nếu người sử dụng lao động tổ chức sản xuất kinh doanh hiệu quả thì người lao động sẽ nhận được gì?",
+      options: [
+        "Nắm quyền điều hành công ty",
+        "Có việc làm và thu nhập ổn định",
+        "Trở thành cổ đông chính",
+        "Giảm được tối đa giờ làm việc"
+      ],
+      correct: 1
+    },
+    {
+      text: "Trong mối quan hệ với người lao động, người sử dụng lao động thường luôn tìm cách gì để tối đa hóa lợi nhuận?",
+      options: [
+        "Tăng cường phúc lợi xã hội",
+        "Chia đều lợi nhuận cho nhân viên",
+        "Giảm chi phí, đặc biệt là tiền lương",
+        "Tăng thời gian nghỉ phép"
+      ],
+      correct: 2
+    },
+    {
+      text: "Việc những người sử dụng lao động liên kết, hợp tác với nhau trong kinh doanh sẽ mang lại kết quả gì?",
+      options: [
+        "Nâng cao hiệu quả hoạt động và sức cạnh tranh",
+        "Triệt tiêu hoàn toàn rủi ro kinh doanh",
+        "Thao túng được chính sách nhà nước",
+        "Loại bỏ hoàn toàn sự cạnh tranh trên thị trường"
+      ],
+      correct: 0
+    },
+    {
+      text: "Khi có nhiều người bán sức lao động cạnh tranh với nhau trên thị trường, hệ quả tiêu cực nào có thể xảy ra?",
+      options: [
+        "Tăng tiền lương đáng kể cho mọi người",
+        "Làm giảm tiền lương và gia tăng thất nghiệp",
+        "Cải thiện điều kiện làm việc ngay lập tức",
+        "Xóa bỏ hoàn toàn mâu thuẫn lao động"
+      ],
+      correct: 1
+    },
+    {
+      text: "Người lao động có thể liên kết với nhau để bảo vệ quyền lợi của mình thông qua tổ chức nào?",
+      options: [
+        "Hội đồng quản trị",
+        "Cơ quan thuế",
+        "Công đoàn",
+        "Hiệp hội doanh nghiệp"
+      ],
+      correct: 2
+    },
+    {
+      text: "Khi lợi ích cá nhân được thực hiện tốt, nó sẽ có tác động như thế nào đối với xã hội?",
+      options: [
+        "Làm triệt tiêu các lợi ích nhóm khác",
+        "Không có bất kỳ tác động nào đến xã hội",
+        "Góp phần thúc đẩy lợi ích xã hội",
+        "Kìm hãm sự phát triển của lợi ích nhóm"
+      ],
+      correct: 2
+    },
+    {
+      text: "Trong các quan hệ lợi ích kinh tế cơ bản, hai mặt thống nhất và mâu thuẫn mang ý nghĩa gì?",
+      options: [
+        "Thống nhất gây trì trệ, mâu thuẫn cần bị loại bỏ",
+        "Cả thống nhất và mâu thuẫn đều kìm hãm kinh tế",
+        "Thống nhất và mâu thuẫn sẽ tự động cân bằng mà không cần can thiệp",
+        "Thống nhất tạo động lực phát triển, mâu thuẫn cần được điều hòa hợp lý"
+      ],
+      correct: 3
+    }
+  ];
+
+  const labels = ['A', 'B', 'C', 'D'];
+  const labelColors = ['#7c3aed', '#ec4899', '#0ea5e9', '#f59e0b'];
+
+  let currentQ = 0;
+  let score = 0;
+  let answered = false;
+
+  const defaultConfig = {
+    game_title: 'AI ĐÃ HỌC BÀI',
+    correct_message: 'Chúc mừng! Bạn trả lời đúng rồi!',
+    wrong_message: 'Rất tiếc! Đáp án chưa chính xác.',
+    background_color: '#0a0e1a',
+    surface_color: '#1a1040',
+    text_color: '#e2e8f0',
+    primary_action_color: '#7c3aed',
+    secondary_action_color: '#10b981',
+    font_family: 'Be Vietnam Pro',
+    font_size: 16
+  };
+
+  function showScreen(id) {
+    ['screen-start','screen-question','screen-correct','screen-wrong','screen-result'].forEach(s => {
+      const el = document.getElementById(s);
+      el.classList.add('hidden');
+      el.classList.remove('flex');
+    });
+    const target = document.getElementById(id);
+    target.classList.remove('hidden');
+    target.classList.add('flex');
+  }
+
+  function startGame() {
+    currentQ = 0;
+    score = 0;
+    showQuestion();
+  }
+
+  function showQuestion() {
+    answered = false;
+    showScreen('screen-question');
+    const q = questions[currentQ];
+    document.getElementById('q-counter').textContent = `Câu ${currentQ + 1}/7`;
+    document.getElementById('score-text').textContent = `${score} điểm`;
+    document.getElementById('progress-bar').style.width = `${((currentQ + 1) / 7) * 100}%`;
+
+    const qCard = document.getElementById('question-card');
+    qCard.classList.remove('slide-up-anim');
+    void qCard.offsetWidth;
+    qCard.classList.add('slide-up-anim');
+
+    document.getElementById('q-text').textContent = q.text;
+
+    const grid = document.getElementById('options-grid');
+    grid.innerHTML = '';
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn text-left rounded-2xl p-4 md:p-5 flex items-start gap-3';
+      btn.style.cssText = `background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; animation: slide-up 0.4s ease-out ${i * 0.08}s both;`;
+
+      const label = document.createElement('span');
+      label.className = 'flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold';
+      label.style.cssText = `background: ${labelColors[i]}20; color: ${labelColors[i]};`;
+      label.textContent = labels[i];
+
+      const text = document.createElement('span');
+      text.className = 'text-base font-medium leading-relaxed pt-0.5';
+      text.style.color = '#e2e8f0';
+      text.textContent = opt;
+
+      btn.appendChild(label);
+      btn.appendChild(text);
+
+      btn.addEventListener('click', () => handleAnswer(i, btn));
+      grid.appendChild(btn);
+    });
+
+    lucide.createIcons();
+  }
+
+  function handleAnswer(index, btn) {
+    if (answered) return;
+    answered = true;
+
+    const q = questions[currentQ];
+    const isCorrect = index === q.correct;
+
+    // Highlight selected
+    const allBtns = document.querySelectorAll('#options-grid .option-btn');
+    allBtns.forEach((b, i) => {
+      b.style.cursor = 'default';
+      if (i === q.correct) {
+        b.style.background = 'rgba(74, 222, 128, 0.15)';
+        b.style.borderColor = '#4ade80';
+      } else if (i === index && !isCorrect) {
+        b.style.background = 'rgba(239, 68, 68, 0.15)';
+        b.style.borderColor = '#ef4444';
+      } else {
+        b.style.opacity = '0.4';
+      }
+    });
+
+    if (isCorrect) {
+      score++;
+      setTimeout(() => {
+        showScreen('screen-correct');
+        const cfg = window.elementSdk ? window.elementSdk.config : defaultConfig;
+        document.getElementById('correct-msg').textContent = cfg.correct_message || defaultConfig.correct_message;
+        spawnConfetti('confetti-container');
+        if (currentQ === questions.length - 1) {
+          document.getElementById('btn-next').innerHTML = '<span class="flex items-center gap-2 justify-center"><i data-lucide="trophy" style="width:18px;height:18px;"></i> XEM KẾT QUẢ</span>';
+        } else {
+          document.getElementById('btn-next').innerHTML = '<span class="flex items-center gap-2 justify-center">CÂU TIẾP THEO <i data-lucide="arrow-right" style="width:18px;height:18px;"></i></span>';
+        }
+        lucide.createIcons();
+      }, 800);
+    } else {
+      setTimeout(() => {
+        showScreen('screen-wrong');
+        const cfg = window.elementSdk ? window.elementSdk.config : defaultConfig;
+        document.getElementById('wrong-msg').textContent = cfg.wrong_message || defaultConfig.wrong_message;
+        document.getElementById('correct-answer-text').textContent = `${labels[q.correct]}. ${q.options[q.correct]}`;
+        if (currentQ === questions.length - 1) {
+          document.getElementById('btn-next-wrong').innerHTML = '<span class="flex items-center gap-2 justify-center"><i data-lucide="trophy" style="width:18px;height:18px;"></i> XEM KẾT QUẢ</span>';
+        } else {
+          document.getElementById('btn-next-wrong').innerHTML = '<span class="flex items-center gap-2 justify-center">CÂU TIẾP THEO <i data-lucide="arrow-right" style="width:18px;height:18px;"></i></span>';
+        }
+        lucide.createIcons();
+      }, 800);
+    }
+  }
+
+  function nextQuestion() {
+    currentQ++;
+    if (currentQ >= questions.length) {
+      showResult();
+    } else {
+      showQuestion();
+    }
+  }
+
+  function showResult() {
+    showScreen('screen-result');
+    document.getElementById('result-score').textContent = score;
+
+    const pct = (score / 7) * 100;
+
+    if (score >= 6) {
+      document.getElementById('result-emoji').textContent = '🏆';
+      document.getElementById('result-title').textContent = 'Xuất sắc!';
+      document.getElementById('result-title').style.color = '#4ade80';
+      document.getElementById('result-subtitle').textContent = 'Bạn nắm rất vững kiến thức bài học!';
+      spawnConfetti('result-confetti');
+    } else if (score >= 4) {
+      document.getElementById('result-emoji').textContent = '👏';
+      document.getElementById('result-title').textContent = 'Khá tốt!';
+      document.getElementById('result-title').style.color = '#fbbf24';
+      document.getElementById('result-subtitle').textContent = 'Hãy ôn lại thêm để đạt điểm cao hơn nhé!';
+    } else {
+      document.getElementById('result-emoji').textContent = '📚';
+      document.getElementById('result-title').textContent = 'Cần cố gắng thêm!';
+      document.getElementById('result-title').style.color = '#f87171';
+      document.getElementById('result-subtitle').textContent = 'Đọc lại bài và thử lại, bạn sẽ làm tốt hơn!';
+    }
+
+    setTimeout(() => {
+      document.getElementById('result-bar').style.width = `${pct}%`;
+    }, 300);
+
+    lucide.createIcons();
+  }
+
+  function restartGame() {
+    startGame();
+  }
+
+  function spawnConfetti(containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    const colors = ['#7c3aed','#a78bfa','#4ade80','#fbbf24','#ec4899','#38bdf8','#f472b6'];
+    for (let i = 0; i < 40; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = `${Math.random() * 100}%`;
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDelay = `${Math.random() * 1.5}s`;
+      piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      piece.style.width = `${6 + Math.random() * 8}px`;
+      piece.style.height = `${6 + Math.random() * 8}px`;
+      container.appendChild(piece);
+    }
+  }
+
+  // Element SDK integration
+  function applyConfig(config) {
+    const c = config || defaultConfig;
+    const title = c.game_title || defaultConfig.game_title;
+    const font = c.font_family || defaultConfig.font_family;
+    const fontSize = c.font_size || defaultConfig.font_size;
+    const bg = c.background_color || defaultConfig.background_color;
+    const surface = c.surface_color || defaultConfig.surface_color;
+    const textClr = c.text_color || defaultConfig.text_color;
+    const primary = c.primary_action_color || defaultConfig.primary_action_color;
+    const secondary = c.secondary_action_color || defaultConfig.secondary_action_color;
+
+    // Title
+    const titleEl = document.getElementById('title-text');
+    if (titleEl) titleEl.textContent = title;
+
+    // Font
+    const baseFontStack = `${font}, 'Be Vietnam Pro', sans-serif`;
+    document.getElementById('app').style.fontFamily = baseFontStack;
+
+    // Font size
+    document.getElementById('app').style.fontSize = `${fontSize}px`;
+
+    // Background
+    document.getElementById('screen-start').style.background = `linear-gradient(135deg, ${bg} 0%, ${surface} 50%, ${bg} 100%)`;
+    document.getElementById('screen-question').style.background = `linear-gradient(160deg, ${bg} 0%, #111827 100%)`;
+    document.getElementById('screen-result').style.background = `linear-gradient(160deg, ${bg} 0%, ${surface} 50%, ${bg} 100%)`;
+
+    // Text color
+    const qText = document.getElementById('q-text');
+    if (qText) qText.style.color = textClr;
+
+    // Primary action buttons
+    const startBtn = document.querySelector('#screen-start .option-btn');
+    if (startBtn) {
+      startBtn.style.background = `linear-gradient(135deg, ${primary}, ${primary}cc)`;
+      startBtn.style.boxShadow = `0 4px 30px ${primary}66`;
+    }
+
+    // Secondary action (correct screen)
+    const correctIcon = document.querySelector('#screen-correct .correct-glow');
+    if (correctIcon) correctIcon.style.background = `linear-gradient(135deg, ${secondary}dd, ${secondary})`;
+
+    // Correct message
+    const correctMsgEl = document.getElementById('correct-msg');
+    if (correctMsgEl) correctMsgEl.textContent = c.correct_message || defaultConfig.correct_message;
+
+    // Wrong message
+    const wrongMsgEl = document.getElementById('wrong-msg');
+    if (wrongMsgEl) wrongMsgEl.textContent = c.wrong_message || defaultConfig.wrong_message;
+  }
+
+  // Initialize Element SDK
+  if (window.elementSdk) {
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange: async (config) => {
+        applyConfig(config);
+      },
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (v) => { config.background_color = v; window.elementSdk.setConfig({ background_color: v }); }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (v) => { config.surface_color = v; window.elementSdk.setConfig({ surface_color: v }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (v) => { config.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (v) => { config.primary_action_color = v; window.elementSdk.setConfig({ primary_action_color: v }); }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (v) => { config.secondary_action_color = v; window.elementSdk.setConfig({ secondary_action_color: v }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (v) => { config.font_family = v; window.elementSdk.setConfig({ font_family: v }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (v) => { config.font_size = v; window.elementSdk.setConfig({ font_size: v }); }
+        }
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ['game_title', config.game_title || defaultConfig.game_title],
+        ['correct_message', config.correct_message || defaultConfig.correct_message],
+        ['wrong_message', config.wrong_message || defaultConfig.wrong_message]
+      ])
+    });
+  }
+
+  // Init Lucide icons
+  lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9de50169450d09ec',t:'MTc3Mzg0NDk2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
